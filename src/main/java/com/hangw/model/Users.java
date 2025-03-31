@@ -8,19 +8,23 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Component
+@NoArgsConstructor
 public class Users {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long Id;
 	
 	@Column(unique = true)
-	private String Email;
+	private String email;
+	
+	private String name;
 	
 	private String nickname;
 	
@@ -33,4 +37,9 @@ public class Users {
 	private String interest;
 	
 	private String location;
+	
+	public Users(String name, String email) {
+		this.name = name;
+		this.email = email;
+	}
 }

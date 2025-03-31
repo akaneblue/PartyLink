@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
+
+<head>
+	<title>회원가입</title>
+</head>
+
+<body>
+	<main layout:fragment="content">
+		<section class="auth-section">
+			<div class="container">
+				<div class="auth-container">
+					<div class="auth-header">
+						<h1>회원가입</h1>
+						<p>모임나라의 회원이 되어 다양한 모임에 참여해보세요</p>
+					</div>
+
+					<form class="auth-form" th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
+						<div th:if="${#fields.hasAnyErrors()}">
+							<div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+						</div>
+						<div class="form-group">
+							<label for="username">이름</label>
+							<div class="input-with-icon">
+								<i class="fa-regular fa-user"></i>
+								<input type="text" id="userName" name="userName" placeholder="이름을 입력하세요" required>
+							</div>
+						</div>
+	
+						<div class="form-group">
+							<label for="email">이메일</label>
+							<div class="input-with-icon">
+								<i class="fa-regular fa-envelope"></i>
+								<input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="password">비밀번호</label>
+							<div class="input-with-icon">
+								<i class="fa-solid fa-lock"></i>
+								<input type="password" id="password1" name="password1" placeholder="비밀번호를 입력하세요" required>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="confirmPassword">비밀번호 확인</label>
+							<div class="input-with-icon">
+								<i class="fa-solid fa-lock"></i>
+								<input type="password" id="password2" name="password2"
+									placeholder="비밀번호를 다시 입력하세요" required>
+							</div>
+						</div>
+
+						<button type="submit" class="btn btn-primary btn-block">회원가입</button>
+					</form>
+
+					<div class="auth-divider">
+						<span>또는</span>
+					</div>
+
+					<a href="/oauth2/authorization/google" class="btn btn-social btn-google">
+						<i class="fa-brands fa-google"></i>
+						구글로 로그인
+					</a>
+
+					<div class="auth-footer">
+						<p>이미 계정이 있으신가요? <a href="user/login" class="auth-link">로그인</a></p>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+</body>
+
+</html>

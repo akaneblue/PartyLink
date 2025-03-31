@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
+
+<head>
+	<title>로그인</title>
+</head>
+
+<body>
+	<main layout:fragment="content">
+		<section class="auth-section">
+			<div class="container">
+				<div class="auth-container">
+					<div class="auth-header">
+						<h1>로그인</h1>
+						<p>모임나라에 오신 것을 환영합니다</p>
+						<div th:if="${param.error}" class="error-message">
+							이메일 또는 비밀번호가 올바르지 않습니다.
+						</div>
+					</div>
+
+					<form class="auth-form" th:action="@{/user/login}" method="post">
+						<div class="form-group">
+							<label for="username">이메일</label>
+							<div class="input-with-icon">
+								<i class="fa-regular fa-user"></i>
+								<input type="text" id="email" name="email" placeholder="이메일을 입력하세요" required>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="password">비밀번호</label>
+							<div class="input-with-icon">
+								<i class="fa-solid fa-lock"></i>
+								<input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+							</div>
+						</div>
+
+						<div class="form-options">
+							<a href="/user/forgot-password" class="forgot-password">비밀번호 찾기</a>
+						</div>
+
+						<button type="submit" class="btn btn-primary btn-block">로그인</button>
+					</form>
+
+					<div class="auth-divider">
+						<span>또는</span>
+					</div>
+
+					<a href="/oauth2/authorization/google" class="btn btn-social btn-google">
+						<i class="fa-brands fa-google"></i>
+						구글로 로그인
+					</a>
+
+					<div class="auth-footer">
+						<p>아직 계정이 없으신가요? <a href="/user/signup" class="auth-link">회원가입</a></p>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+</body>
+
+</html>

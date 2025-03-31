@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">PartyLink</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<script th:src="@{/js/script.js}" defer></script>
+</head>
+
+<body>
+	<header class="header">
+		<div class="container">
+			<div class="header-content">
+				<a href="/" class="logo">PartyLink</a>
+				<nav class="main-nav">
+					<ul>
+						<li><a href="/meetings">모임찾기</a></li>
+						<li><a href="/about">내 모임</a></li>
+						<li><a href="/notice">신청상태</a></li>
+					</ul>
+				</nav>
+				<div class="header-actions">
+					<button class="theme-toggle" id="themeToggle">
+						<i class="fa-regular fa-moon"></i>
+					</button>
+					<div class="dropdown">
+						<button class="dropdown-toggle" id="dropdownToggle">
+							<i class="fa-solid fa-ellipsis-vertical"></i>
+						</button>
+						<div class="dropdown-menu">
+							<a sec:authorize="isAnonymous()" href="user/login" class="dropdown-item">로그인</a>
+							<a sec:authorize="isAuthenticated()" href="user/logout" class="dropdown-item">로그아웃</a>
+							<a href="user/profile" class="dropdown-item">내 프로필</a>
+							<a href="user/meetings" class="dropdown-item">내 모임</a>
+						</div>
+					</div>
+					<button class="menu-toggle" id="menuToggle">
+						<i class="fa-solid fa-bars"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<main layout:fragment="content"></main>
+
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-logo">PartyLink</div>
+				<div class="footer-info">
+					<p>© 2025 2019401081 한규원</p>
+					<p>이용약관 | 개인정보처리방침 | 문의하기</p>
+				</div>
+				<div class="social-links">
+					<a href="#"></a>
+					<a href="#"></a>
+					<a href="#"></a>
+				</div>
+			</div>
+		</div>
+	</footer>
+</body>
+
+</html>
