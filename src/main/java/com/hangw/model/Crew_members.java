@@ -1,12 +1,8 @@
 package com.hangw.model;
 
-import java.time.LocalDateTime;
-
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,43 +11,30 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
 @Entity
 @Component
 @NoArgsConstructor
-public class Groups {
-
+public class Crew_members {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long Id;
 	
-	@Column(unique = true)
-	private String name;
-	
-	private int max_members;
-	
-	private int cur_members;
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private Users user;
 	
 	@ManyToOne
-	@JoinColumn(name = "leader_id")
-	private Users leader;
-	
-	@CreationTimestamp
-	private LocalDateTime created;
-	
-	private String description;
+	@JoinColumn(name = "group_id", nullable = false)
+	private Crews group;
 	
 	@Enumerated(EnumType.STRING)
-	@ColumnDefault("Open")
-	private Status status;
-	
-	private String category;
-	
-	private String location;
+	@ColumnDefault("'participant'")
+	private UserRole role;
 }

@@ -22,7 +22,6 @@ public class UserService {
 		user.setName(name);
 		user.setEmail(email);
 		user.setPassword(passwordEncoder.encode(password));
-		
 		userRepository.save(user);
 		return user;
 	}
@@ -35,4 +34,13 @@ public class UserService {
 			throw new DataNotFoundException("사용자를 찾을 수 없습니다.");
 		}
 	}
+	
+	public Users findUserById(Long id) {
+		Users user = userRepository.findById(id).get();
+		return user;
+	}
+	
+	public void save(Users user) {
+        userRepository.save(user);
+    }
 }

@@ -13,7 +13,6 @@
 				<div class="auth-container">
 					<div class="auth-header">
 						<h1>로그인</h1>
-						<p>모임나라에 오신 것을 환영합니다</p>
 						<div th:if="${param.error}" class="error-message">
 							이메일 또는 비밀번호가 올바르지 않습니다.
 						</div>
@@ -48,8 +47,12 @@
 					</div>
 
 					<a href="/oauth2/authorization/google" class="btn btn-social btn-google">
-						<i class="fa-brands fa-google"></i>
-						구글로 로그인
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/24px-Google_%22G%22_logo.svg.png" alt="Google" style="width: 24px; height: 24px;">
+						Google로 로그인
+					</a>
+					<a href="/oauth2/authorization/naver" class="btn btn-social btn-google">
+						<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fl0xly%2FbtscZVMt3EF%2FBddH3IHVB3PMEap62y0dY0%2Fimg.png" alt="Naver" style="width: 24px; height: 24px;">
+						Naver로 로그인
 					</a>
 
 					<div class="auth-footer">

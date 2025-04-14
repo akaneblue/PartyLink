@@ -1,5 +1,5 @@
 package com.hangw.model;
 
 public enum Status {
-	Open,Closed
+	Processing, Accepted, Rejected
 }

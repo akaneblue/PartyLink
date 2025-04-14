@@ -1,52 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/base}">
+	layout:decorate="~{layout/base}">
+
 <head>
-    <title>홈</title>
+	<title>홈</title>
 </head>
+
 <body>
-    <main layout:fragment="content">
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">취미도, 공부도<br>함께하면<br>더 즐겁다!</h1>
-                    <div class="category-filters">
-                        <button class="filter-btn active">전체</button>
-                        <button class="filter-btn">취미</button>
-                        <button class="filter-btn">스포츠</button>
-                        <button class="filter-btn">학습</button>
-                    </div>
-                </div>
-            </div>
-        </section>
+	<main layout:fragment="content">
+		<section class="hero">
+			<div class="container">
+				<div class="hero-content">
+					<h1 class="hero-title">취미도, 공부도<br>함께하면<br>더 즐겁다!</h1>
+<!--					<div class="category-filters">-->
+<!--						<button class="filter-btn active">전체</button>-->
+<!--						<button class="filter-btn">취미</button>-->
+<!--						<button class="filter-btn">스포츠</button>-->
+<!--						<button class="filter-btn">학습</button>-->
+<!--					</div>-->
+				</div>
+			</div>
+		</section>
 
-        <section class="featured-meetings">
-            <div class="container">
-                <div class="meetings-grid">
-                    <div class="meeting-card" th:each="i : ${#numbers.sequence(1, 4)}">
-                        <div class="meeting-image">
-                            <img th:src="@{/placeholder.svg?height=250&width=400}" alt="모임 이미지">
-                        </div>
-                        <div class="meeting-content" th:classappend="${i % 4 == 1 ? 'dark' : (i % 4 == 2 ? 'green' : (i % 4 == 3 ? 'light' : 'blue'))}">
-                            <span class="meeting-category" th:text="${i % 4 == 1 ? '취미' : (i % 4 == 2 ? '스포츠' : (i % 4 == 3 ? '학습' : '문화'))}">카테고리</span>
-                            <h3 class="meeting-title" th:text="${i % 4 == 1 ? '주말 등산 모임' : (i % 4 == 2 ? '축구 한판!' : (i % 4 == 3 ? '코딩 스터디' : '영화 감상회'))}">모임 제목</h3>
-                            <p class="meeting-description" th:text="${i % 4 == 1 ? '주말마다 함께 산에 오르며 건강한 취미생활을 즐겨보세요.' : (i % 4 == 2 ? '매주 토요일 오후, 함께 축구를 즐기는 모임입니다.' : (i % 4 == 3 ? '프로그래밍 언어를 함께 배우고 성장하는 스터디 그룹입니다.' : '다양한 장르의 영화를 함께 감상하고 토론하는 모임입니다.'))}">모임 설명</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+		<section class="featured-meetings">
+			<div class="container">
+				<div class="meetings-grid">
+					<!-- 실제 모임 데이터 반복 -->
+					<div class="meeting-card" th:each="crew : ${crewsList}" th:onclick="'location.href=\'/meetings/detail?id=' + ${crew.id} + '\';'">
+						<div class="meeting-content">
+							<span class="meeting-category" th:text="${crew.category}">카테고리</span><br/>
+							<h3 class="meeting-title" th:text="${crew.name}">모임 제목</h3><br/>
+							<div class="meeting-meta">
+								<span class="meeting-date">
+									<i class="fa-regular fa-calendar"></i>
+									<span th:text="${#temporals.format(crew.sdate, 'yyyy.MM.dd') + (crew.edate != null ? ' ~ ' + #temporals.format(crew.edate, 'yyyy.MM.dd') : '')}">날짜</span>
+								</span>
+								<span class="meeting-location">
+									<i class="fa-solid fa-location-dot"></i>
+									<span th:text="${crew.location} != '' ? ${crew.location} : '장소없음'">장소</span>
+								</span>
+								<span class="meeting-members">
+									<i class="fa-solid fa-user"></i>
+									<span th:text="${crew.cur_members} + '/' + ${crew.max_members}">인원수</span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        <section class="cta-section">
-            <div class="container">
-                <div class="cta-content">
-                    <h2>나만의 모임을 만들어보세요</h2>
-                    <p>관심사가 비슷한 사람들과 함께하는 특별한 경험</p>
-                    <a href="/meetings/create" class="btn btn-primary">모임 만들기</a>
-                </div>
-            </div>
-        </section>
-    </main>
+				<!-- 페이징 UI -->
+				<div class="pagination">
+					<a th:if="${currentPage > 0}" th:href="@{/(page=${currentPage - 1})}" class="page-link"
+						style="flex-shrink: 0; font-size: 2rem;">
+						<i class="fa-solid fa-chevron-left"></i>
+					</a>
+
+					<a th:if="${crewsList.size() == 3}" th:href="@{/(page=${currentPage + 1})}" class="page-link"
+						style="flex-shrink: 0; font-size: 2rem;">
+						<i class="fa-solid fa-chevron-right"></i>
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="cta-section">
+			<div class="container">
+				<div class="cta-content">
+					<h2>나만의 모임을 만들어보세요</h2>
+					<p>관심사가 비슷한 사람들과 함께하는 특별한 경험</p>
+					<a href="/meetings/create" class="btn btn-primary">모임 만들기</a>
+				</div>
+			</div>
+		</section>
+	</main>
 </body>
-</html>
 
+</html>

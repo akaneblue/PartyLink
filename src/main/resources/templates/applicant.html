@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
+
+<head>
+	<title>모임 신청서</title>
+</head>
+
+<body>
+	<main layout:fragment="content">
+		<section class="page-header">
+			<div class="container">
+				<h1>모임 신청서 작성</h1>
+				<p>모임에 참여하고 싶다면 신청서를 작성해주세요.</p>
+			</div>
+		</section>
+
+		<section class="create-application">
+			<div class="container">
+				<form class="meeting-form" th:object="${applicationForm}" method="post">
+					<div class="form-group">
+						<label for="intro">자기소개</label>
+						<textarea id="intro" name="intro" rows="5" placeholder="자신을 소개해주세요"></textarea>
+					</div>
+					<input type="hidden" name="crew" th:value="${groupId}" />
+					<div class="form-actions">
+						<button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
+						<button type="submit" class="btn btn-primary">신청하기</button>
+					</div>
+				</form>
+			</div>
+		</section>
+	</main>
+</body>
+
+</html>

@@ -1,11 +1,11 @@
 :root {
   --color-primary: #44bfb7;
   --color-primary-dark: #6bc348;
-  --color-primary-light: #a8ee87;
+  --color-primary-light: #a2d7d3;
   --color-secondary: #333333;
   --color-text: #333333;
   --color-text-light: #666666;
-  --color-background: #ffffff;
+  --color-background: #f0fafa;
   --color-border: #e5e5e5;
   --color-card-dark: #333333;
   --color-card-green: #8ce563;
@@ -18,7 +18,7 @@
 .dark-theme {
   --color-primary: #44bfb7;
   --color-primary-dark: #6bc348;
-  --color-primary-light: #a8ee87;
+  --color-primary-light: #2e6f6a;
   --color-secondary: #f5f5f5;
   --color-text: #f5f5f5;
   --color-text-light: #cccccc;
@@ -212,6 +212,7 @@ body {
 .filter-btn {
   background-color: var(--color-background);
   border: 1px solid var(--color-border);
+  color: var(--color-text);
   border-radius: 20px;
   padding: 8px 16px;
   font-size: 0.9rem;
@@ -247,38 +248,31 @@ body {
 }
 
 .meeting-image {
-  height: 180px;
+  height: 200px;
+  overflow: hidden;
+}
+
+.meeting-image1 {
+  height: auto;
   overflow: hidden;
 }
 
 .meeting-image img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto; /* 이미지 비율 유지 */
+  object-fit: contain;
 }
+.meeting-image1 img {
+  width: 100%;
+  height: auto; /* 이미지 비율 유지 */
+  object-fit: contain;
+}
+
 
 .meeting-content {
   padding: 20px;
-}
-
-.meeting-content.dark {
-  background-color: var(--color-card-dark);
-  color: white;
-}
-
-.meeting-content.green {
-  background-color: var(--color-card-green);
-  color: white;
-}
-
-.meeting-content.light {
-  background-color: var(--color-card-light);
-  color: var(--color-text);
-}
-
-.meeting-content.blue {
-  background-color: var(--color-card-blue);
-  color: white;
+  background-color: #c8e6e3;
+  color: black;
 }
 
 .meeting-category {
@@ -408,7 +402,7 @@ body {
 
 /* Footer */
 .footer {
-  background-color: var(--color-secondary);
+  background-color: #333333;
   color: white;
   padding: 50px 0;
 }

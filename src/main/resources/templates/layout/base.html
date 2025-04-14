@@ -18,8 +18,8 @@
 				<nav class="main-nav">
 					<ul>
 						<li><a href="/meetings">모임찾기</a></li>
-						<li><a href="/about">내 모임</a></li>
-						<li><a href="/notice">신청상태</a></li>
+						<li><a href="/meetings/mycrew">내 모임</a></li>
+						<li><a href="/appli">신청상태</a></li>
 					</ul>
 				</nav>
 				<div class="header-actions">
@@ -31,10 +31,10 @@
 							<i class="fa-solid fa-ellipsis-vertical"></i>
 						</button>
 						<div class="dropdown-menu">
-							<a sec:authorize="isAnonymous()" href="user/login" class="dropdown-item">로그인</a>
-							<a sec:authorize="isAuthenticated()" href="user/logout" class="dropdown-item">로그아웃</a>
-							<a href="user/profile" class="dropdown-item">내 프로필</a>
-							<a href="user/meetings" class="dropdown-item">내 모임</a>
+							<a sec:authorize="isAnonymous()" href="/user/login" class="dropdown-item">로그인</a>
+							<a sec:authorize="isAuthenticated()" href="/user/logout" class="dropdown-item">로그아웃</a>
+							<a href="/user/mypage" class="dropdown-item">내 프로필</a>
+							<a href="/user/meetings" class="dropdown-item">내 모임</a>
 						</div>
 					</div>
 					<button class="menu-toggle" id="menuToggle">
@@ -52,8 +52,8 @@
 			<div class="footer-content">
 				<div class="footer-logo">PartyLink</div>
 				<div class="footer-info">
-					<p>© 2025 2019401081 한규원</p>
-					<p>이용약관 | 개인정보처리방침 | 문의하기</p>
+					<p>©2019301081 한규원</p>
+					<p>서경대학교 소프트웨어학과</p>
 				</div>
 				<div class="social-links">
 					<a href="#"></a>
