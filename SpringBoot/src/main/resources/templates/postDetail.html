@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${post.title}">게시글</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <section class="post-detail">
+        <div class="container">
+            <div class="post-header">
+                <h1 th:text="${post.title}">제목</h1>
+                <div class="post-meta">
+                    <span><i class="fa-regular fa-calendar"></i> 
+                        <span th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd HH:mm')}">작성일</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="post-content" th:utext="${post.content}">
+                <!-- 글 내용 HTML로 렌더링 (Summernote 등) -->
+                글 내용
+            </div>
+
+            <hr />
+
+            <div class="post-footer">
+                <a th:href="@{/meetings/crewpage(id=${post.crew.id})}" class="btn btn-outline">
+                    ← 뒤로가기
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
+
+<head>
+	<title>모임 상세</title>
+	<script th:if="${errorMessage != null}" th:inline="javascript">
+		alert('[[${errorMessage}]]');
+	</script>
+</head>
+
+<body>
+	<main layout:fragment="content">
+		<section class="meeting-detail">
+			<div class="container">
+				<div class="meeting-header">
+					<div class="meeting-category" th:text="${crew.category.getName}">카테고리</div>
+					<h1 class="meeting-title" th:text="${crew.name}">이름</h1>
+					<div class="meeting-meta">
+						<span class="meeting-date">
+							<i class="fa-regular fa-calendar"></i>
+							<span
+								th:text="${#temporals.format(crew.sdate, 'yyyy.MM.dd') + (crew.edate != null ? ' ~ ' + #temporals.format(crew.edate, 'yyyy.MM.dd') : '')}">날짜</span>
+						</span>
+						<span class="meeting-time">
+							<i class="fa-regular fa-clock"></i>
+							<span th:text="${#temporals.format(crew.time, 'HH:mm')}">시간</span>
+						</span>
+						<span class="meeting-location">
+							<i class="fa-solid fa-location-dot"></i>
+							<span th:text="${crew.location} != '' ? ${crew.location} : '장소없음'">장소</span>
+						</span>
+						<span class="meeting-members">
+							<i class="fa-solid fa-user"></i>
+							<span th:text="${crew.cur_members + ' / ' + crew.max_members}">인원</span>
+						</span>
+					</div>
+				</div>
+
+				<div class="meeting-content">
+					<div class="meeting-image1">
+						<img th:src="${crew.imagePath} != null ? ${crew.imagePath} : '/placeholder.png'" alt="모임 이미지">
+					</div>
+
+					<div class="meeting-description">
+						<h2>모임 소개</h2>
+						<p th:text="${crew.description}" style="white-space: pre-wrap;">설명</p>
+					</div>
+
+					<div class="host-info">
+						<h2>주최자 정보</h2>
+						<div class="host-profile">
+							<div class="host-avatar">
+								<i class="fa-solid fa-user"></i>
+							</div>
+							<div class="host-details" th:onclick="'location.href=\'' + @{/user/userdetail(userId=${leader.id})} + '\''">
+								<h3 th:text="${leader.nickname ?: leader.name}">리더이름</h3>
+								<p th:text="${leader.description}">리더 설명</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="participants">
+						<h2>참가자 <span th:text="${crew.cur_members} + '/' + ${crew.max_members}"></span></h2>
+						<div class="participants-list">
+							<div class="participant" th:each="member : ${members}">
+								<div class="participant-avatar">
+									<i class="fa-solid fa-user"></i>
+								</div>
+								<div class="participant-name" th:text="${member.user.nickname ?: member.user.name}">참가자
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="meeting-actions">
+					<a th:href="@{/appli/create(groupId=${crew.id})}" class="btn btn-primary">
+						참가 신청하기
+					</a>
+				</div>
+			</div>
+		</section>
+	</main>
+</body>
+
+</html>

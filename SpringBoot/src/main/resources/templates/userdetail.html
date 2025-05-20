@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
+
+<head>
+	<title>사용자 프로필</title>
+	<link rel="stylesheet" th:href="@{/css/mypage.css}">
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const starsContainer = document.getElementById('interactive-stars');
+			const filledStars = starsContainer.querySelector('.filled-stars');
+			const ratingInput = document.getElementById('rating-value');
+
+			// 클릭 위치 기반으로 별점 계산
+			starsContainer.addEventListener('click', function (e) {
+				const rect = starsContainer.getBoundingClientRect();
+				const offsetX = e.clientX - rect.left;
+				const width = rect.width;
+
+				// 0 ~ 5 범위로 별점 계산
+				let rating = Math.ceil((offsetX / width) * 5);
+				rating = Math.max(1, Math.min(rating, 5)); // 1~5 보정
+
+				// 별점 표시
+				const percent = (rating / 5) * 100;
+				filledStars.style.width = percent + "%";
+				ratingInput.value = rating;
+			});
+		});
+	</script>
+	<script th:if="${errorMessage != null}">
+	    alert('[[${errorMessage}]]');
+	</script>
+</head>
+
+<body>
+	<main layout:fragment="content">
+		<section class="page-header">
+			<div class="container">
+				<h1>사용자 프로필</h1>
+				<p>다른 사용자의 정보와 활동을 확인하세요</p>
+			</div>
+		</section>
+
+		<section class="mypage-section">
+			<div class="container">
+				<div class="mypage-container">
+					<!-- 사이드바 -->
+					<div class="mypage-sidebar">
+						<div class="user-profile">
+							<div class="user-avatar">
+								<img th:src="${user.imagePath != null ? user.imagePath : '/placeholder.png'}"
+									alt="프로필 이미지" style="width:100px; height:100px; object-fit:cover;" />
+							</div>
+							<h3 class="user-name" th:text="${user.nickname ?: user.name}"
+								style="font-size: 2rem; margin-bottom: 10px;">사용자이름
+							</h3>
+							<p class="user-email" th:text="${user.email}">user@example.com</p>
+							<div class="rating-display">
+								<div class="stars">
+									<div class="empty-stars">★★★★★</div>
+									<div class="filled-stars" th:style="'width:' + ((${user.rating} / 5) * 100) + '%'">
+										★★★★★</div>
+								</div>
+								<span class="rating-value" th:text="${#numbers.formatDecimal(user.rating, 1, 2)}"
+									style="font-weight: bold;">평점</span>
+								<span class="rating-count" th:text="|(${user.reviewCount}개 평가)|">(28개 평가)</span>
+							</div>
+						</div>
+						<div class="user-meta">
+							<div class="meta-item">
+								<i class="fa-solid fa-location-dot"></i>
+								<span th:text="${user.location ?: '주소 정보 없음'}">주소정보</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- 메인 콘텐츠 -->
+					<div class="mypage-content">
+						<!-- 기본 정보 -->
+						<div class="content-section">
+							<div class="section-header">
+								<h2>기본 정보</h2>
+							</div>
+							<div class="user-about">
+								<h3>자기소개</h3>
+								<p th:text="${user.description}">기본 소개 텍스트</p>
+							</div>
+							<div class="interest-tags">
+								<h3>관심사</h3>
+								<div class="tags-container">
+									<span class="interest-tag" th:each="tag : ${user.interest}"
+										th:text="${tag.name}">관심사</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- 주최한 모임 -->
+						<div class="content-section">
+							<div class="section-header">
+								<h2>주최한 모임</h2>
+							</div>
+							<div class="meetings-grid">
+								<div class="meeting-card" th:each="crew : ${hostedMeetings}">
+									<div class="meeting-content">
+										<span class="meeting-category" th:text="${crew.category.name}">카테고리</span><br />
+										<h3 class="meeting-title" th:text="${crew.name}">모임 제목</h3><br />
+										<div class="meeting-meta">
+											<span class="meeting-date">
+												<i class="fa-regular fa-calendar"></i>
+												<span
+													th:text="${#temporals.format(crew.sdate, 'yyyy.MM.dd') + (crew.edate != null ? ' ~ ' + #temporals.format(crew.edate, 'yyyy.MM.dd') : '')}">날짜</span>
+											</span>
+											<span class="meeting-location">
+												<i class="fa-solid fa-location-dot"></i>
+												<span
+													th:text="${crew.location} != '' ? ${crew.location} : '장소없음'">장소</span>
+											</span>
+											<span class="meeting-members">
+												<i class="fa-solid fa-user"></i>
+												<span
+													th:text="${crew.cur_members} + '/' + ${crew.max_members}">인원수</span>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="pagination">
+								<a th:if="${hostedPage > 0}"
+									th:href="@{/user/userdetail(userId=${user.id}, hostedPage=${hostedPage - 1})}"
+									class="page-link" style="flex-shrink: 0; font-size: 2rem;">
+									<i class="fa-solid fa-chevron-left"></i>
+								</a>
+
+								<a th:if="${hostedMeetings.content.size() == 3}"
+									th:href="@{/user/userdetail(userId=${user.id}, hostedPage=${hostedPage + 1})}"
+									class="page-link" style="flex-shrink: 0; font-size: 2rem;">
+									<i class="fa-solid fa-chevron-right"></i>
+								</a>
+							</div>
+						</div>
+
+						<!-- 받은 평가 -->
+						<div class="content-section">
+							<div class="section-header">
+								<h2>받은 평가</h2>
+							</div>
+							<form th:action="@{/review/add}" method="post">
+								<input type="hidden" name="userId" th:value="${user.id}">
+								<input type="hidden" name="rating" id="rating-value" value="0">
+
+								<div class="stars" id="interactive-stars">
+									<div class="empty-stars">★★★★★</div>
+									<div class="filled-stars" style="width: 0%">★★★★★</div>
+								</div>
+
+								<textarea id="content" name="content" rows="4" cols="50" required></textarea>
+								<button type="submit" class="btn btn-primary" style="float: right;">등록</button>
+							</form>
+							<div class="reviews-list">
+								<div class="review-item" th:each="review : ${reviews.content}">
+									<div class="review-header">
+										<div class="reviewer-info">
+											<div class="reviewer-details">
+												<h4 class="reviewer-name"
+													th:text="${review.writer.nickname ?: review.writer.name}">평가자</h4>
+												<p class="review-date"
+													th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}">날짜
+												</p>
+											</div>
+										</div>
+										<div class="review-rating">
+											<div class="stars">
+												<div class="empty-stars">★★★★★</div>
+												<div class="filled-stars"
+													th:style="'width:' + ((${review.rating} / 5) * 100) + '%'">
+													★★★★★</div>
+											</div>
+										</div>
+									</div>
+									<div class="review-content">
+										<p th:text="${review.contents}">리뷰 내용</p>
+									</div>
+								</div>
+								<div th:if="${reviews.isEmpty()}">
+									<p>아직 작성된 평가가 없습니다.</p>
+								</div>
+							</div>
+							<div class="pagination">
+								<a th:if="${reviewPage > 0}"
+									th:href="@{/user/userdetail(userId=${user.id}, reviewPage=${reviewPage - 1})}"
+									class="page-link" style="flex-shrink: 0; font-size: 2rem;">
+									<i class="fa-solid fa-chevron-left"></i>
+								</a>
+
+								<a th:if="${reviews.content.size() == 10}"
+									th:href="@{/user/userdetail(userId=${user.id}, reviewPage=${reviewPage + 1})}"
+									class="page-link" style="flex-shrink: 0; font-size: 2rem;">
+									<i class="fa-solid fa-chevron-right"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+</body>
+
+</html>

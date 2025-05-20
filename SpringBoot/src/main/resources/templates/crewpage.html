@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/base}">
+
+<head>
+	<title th:text="${crew.name} + ' 페이지'">모임 페이지</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js}"></script>
+
+	<script th:inline="javascript">
+		let calendarRendered = false;
+
+		document.addEventListener('DOMContentLoaded', function () {
+			const tabButtons = document.querySelectorAll('#group-tabs .filter-btn');
+			const tabContents = document.querySelectorAll('.tab-content');
+
+			tabButtons.forEach(button => {
+				button.addEventListener('click', function () {
+					tabButtons.forEach(btn => btn.classList.remove('active'));
+					this.classList.add('active');
+
+					const targetId = this.getAttribute('data-tab');
+					tabContents.forEach(content => content.classList.remove('active'));
+					const targetContent = document.getElementById(targetId);
+					if (targetContent) {
+						targetContent.classList.add('active');
+
+						if (targetId === 'schedule' && !calendarRendered) {
+							const calendarEl = document.getElementById('calendar');
+							if (calendarEl) {
+								const calendar = new FullCalendar.Calendar(calendarEl, {
+									height: '550px',
+									expandRows: true,
+									slotMinTime: '00:00',
+									slotMaxTime: '23:59',
+									headerToolbar: {
+										left: 'prevYear,prev,next,nextYear today',
+										center: 'title',
+										right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+									},
+									initialView: 'dayGridMonth',
+									navLinks: true,
+									editable: false,
+									selectable: false,
+									nowIndicator: true,
+									dayMaxEvents: true,
+									locale: 'ko',
+									events: {
+										url: '/meetings/calendarList',
+										method: 'GET',
+										extraParams: {
+											crewId: '[[${crew.id}]]'
+										},
+										failure: function () {
+											alert('일정 데이터를 불러오는 데 실패했습니다.');
+										}
+									}
+								});
+								calendar.render();
+								window.myCalendar = calendar;
+								calendarRendered = true;
+							}
+						}
+					}
+				});
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<main layout:fragment="content">
+		<section class="meeting-detail">
+			<div class="container">
+				<div class="meeting-header">
+					<div class="meeting-category" th:text="${crew.category.name}">카테고리</div>
+					<h1 class="meeting-title" th:text="${crew.name}">모임 이름</h1>
+					<div class="meeting-meta">
+						<span class="meeting-location"><i class="fa-solid fa-location-dot"></i>
+							<span th:text="${crew.location} != '' ? ${crew.location} : '장소없음'">장소</span>
+						</span>
+						<span class="meeting-members"><i class="fa-solid fa-user"></i>
+							<span th:text="${crew.cur_members} + '/' + ${crew.max_members}">인원수</span></span>
+					</div>
+				</div>
+
+				<div class="filter-options" id="group-tabs">
+					<button class="filter-btn active" data-tab="announcements">공지사항</button>
+					<button class="filter-btn" data-tab="schedule">일정</button>
+					<button class="filter-btn" data-tab="gallery">갤러리</button>
+				</div>
+
+				<div id="announcements" class="tab-content active">
+					<div class="meeting-content">
+						<h2>공지사항</h2>
+						<a th:href="@{/meetings/crewpage/notice(id=${crew.id})}" class="btn btn-primary">
+							<i class="fa-solid fa-plus"></i> 공지 작성
+						</a>
+						<div>
+							<div th:each="n : ${notice}">
+								<h3 th:text="${n.title}">공지 제목</h3>
+								<p th:text="${n.content}" style="white-space: pre-wrap;">설명</p>
+								<span th:text="${#temporals.format(n.created, 'yyyy.MM.dd HH:mm')}">날짜</span>
+								<hr />
+							</div>
+						</div>
+						<div class="empty-state" th:if="${notice == null or #lists.isEmpty(notice)}">
+							<i class="fa-solid fa-bell"></i>
+							<h3>공지 없음</h3>
+							<p>아직 쓰여진 공지가 없습니다.</p>
+						</div>
+					</div>
+				</div>
+
+				<div id="schedule" class="tab-content">
+					<div class="meeting-content">
+						<h2>모임 일정</h2>
+						<a th:href="@{/meetings/crewpage/schedule(id=${crew.id})}" class="btn btn-primary">
+							<i class="fa-solid fa-plus"></i> 일정 작성
+						</a>
+						<div id="calendar" style="margin-top: 20px;"></div>
+					</div>
+				</div>
+
+				<div id="gallery" class="tab-content">
+					<div class="meeting-content">
+						<h2>갤러리</h2>
+						<a th:href="@{/meetings/crewpage/posts(id=${crew.id})}" class="btn btn-primary">
+							<i class="fa-solid fa-plus"></i> 글 작성
+						</a>
+
+						<div class="gallery-grid">
+							<div class="gallery-card" th:each="p : ${posts}">
+								<a th:href="@{/meetings/crewpage/post(id=${p.id})}">
+									<h3 th:text="${p.title}">제목</h3>
+								</a>
+							</div>
+							<div class="empty-state" th:if="${#lists.isEmpty(posts)}">
+								<i class="fa-solid fa-image"></i>
+								<h3>게시글 없음</h3>
+								<p>아직 등록된 게시글이 없습니다.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+</body>
+
+</html>

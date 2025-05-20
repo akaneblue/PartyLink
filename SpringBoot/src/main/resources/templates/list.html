@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>모임 찾기</title>
+</head>
+<body>
+    <main layout:fragment="content">
+        <section class="page-header">
+            <div class="container">
+                <h1>모임 찾기</h1>
+                <div class="search-filter">
+					<div class="search-box">
+					    <form th:action="@{/meetings}" method="get" style="display: flex; flex: 1;">
+					        <input type="text" name="keyword" th:value="${keyword}" placeholder="모임 검색">
+					        <button type="submit">
+					            <i class="fa-solid fa-search"></i>
+					        </button>
+					    </form>
+					</div>
+					
+                    <div class="filter-options" th:if="${Login}">
+                        <!-- 전체 버튼 -->
+                        <a class="filter-btn"
+                           th:href="@{/meetings}"
+                           th:classappend="${selectedCategory == null} ? ' active'">
+                            전체
+                        </a>
+
+                        <!-- 관심사별 버튼 -->
+                        <a th:each="interest : ${pageuser.interest}"
+                           class="filter-btn"
+                           th:text="${interest.name}"
+                           th:href="@{/meetings(category=${interest.name})}"
+                           th:classappend="${selectedCategory != null and selectedCategory.name == interest.name} ? ' active'">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="meetings-list">
+            <div class="container">
+                <div class="meetings-grid">
+                    <!-- Crews 반복 -->
+                    <div class="meeting-card"
+                         th:each="crew : ${crewsList}"
+                         th:onclick="'location.href=\'/meetings/detail?id=' + ${crew.id} + '\';'">
+                        <div class="meeting-content">
+                            <span class="meeting-category" th:text="${crew.category.name}">카테고리</span><br/>
+                            <h3 class="meeting-title" th:text="${crew.name}">모임 제목</h3><br/>
+                            <div class="meeting-meta">
+                                <span class="meeting-date">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span th:text="${#temporals.format(crew.sdate, 'yyyy.MM.dd') + (crew.edate != null ? ' ~ ' + #temporals.format(crew.edate, 'yyyy.MM.dd') : '')}">날짜</span>
+                                </span>
+                                <span class="meeting-location">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span th:text="${crew.location != '' ? crew.location : '장소없음'}">장소</span>
+                                </span>
+                                <span class="meeting-members">
+                                    <i class="fa-solid fa-user"></i>
+                                    <span th:text="${crew.cur_members} + '/' + ${crew.max_members}">5/10</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <!-- 이전 페이지 -->
+                    <a th:if="${currentPage > 0}"
+                       th:href="@{/meetings(page=${currentPage - 1}, category=${selectedCategory?.name})}"
+                       class="page-link prev">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+
+                    <!-- 현재 페이지 -->
+                    <a href="#" class="page-link active"
+                       th:text="${currentPage + 1}">1</a>
+
+                    <!-- 다음 페이지 -->
+                    <a th:if="${crewsList.size() == 15}"
+                       th:href="@{/meetings(page=${currentPage + 1}, category=${selectedCategory?.name})}"
+                       class="page-link next">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
