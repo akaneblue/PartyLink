@@ -60,5 +60,7 @@ public class Crews {
 	
 	private String location;
 	
+	private String tag;
+	
 	private String imagePath;
 }

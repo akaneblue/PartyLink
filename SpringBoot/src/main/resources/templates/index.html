@@ -19,7 +19,6 @@
 		<section class="featured-meetings">
 			<div class="container">
 				<div class="meetings-grid">
-					<!-- 실제 모임 데이터 반복 -->
 					<div class="meeting-card" th:each="crew : ${crewsList}" th:onclick="'location.href=\'/meetings/detail?id=' + ${crew.id} + '\';'">
 						<div class="meeting-content">
 							<span class="meeting-category" th:text="${crew.category.getName}">카테고리</span><br/>

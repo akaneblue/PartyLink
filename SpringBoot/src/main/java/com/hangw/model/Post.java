@@ -35,4 +35,6 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "crew_id")
     private Crews crew;
+    
+    private String tone;
 }

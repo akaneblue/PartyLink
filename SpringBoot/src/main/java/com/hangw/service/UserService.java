@@ -11,8 +11,10 @@ import com.hangw.model.Interest;
 import com.hangw.model.Users;
 import com.hangw.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class UserService {
