@@ -37,7 +37,7 @@ classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnl
 # -------------------------------
 # OpenRouter API Key 설정
 # -------------------------------
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = "API_Key"
 
 # -------------------------------
 # 1. 게시글 분위기 단어 추출
